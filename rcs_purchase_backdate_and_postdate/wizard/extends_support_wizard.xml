@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="extend_service_wizard_view" model="ir.ui.view">
+            <field name="name">extend.service.wizard.form</field>
+            <field name="model">extends.support.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Extends Service">
+                    <sheet>
+                        <group>
+                            <div class="text-center" style="margin-top:15px;">
+                                <h2 style="color:#007BFF; font-weight:600;">
+                                    Service Extension Offer
+                                </h2>
+                            </div>
+                        </group>
+
+                        <group>
+                            <p style="font-size:14px; text-align:center;">
+                                <field name="message" readonly="1"/>
+                            </p>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="user_name"/>
+                                <field name="contact"/>
+                            </group>
+                            <group>
+                                <field name="email"/>
+                            </group>
+                        </group>
+
+                        <group string="Company Details">
+                            <group>
+                                <field name="company_name"/>
+                                <field name="company_email"/>
+                            </group>
+                            <group>
+                                <field name="company_phone"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <field name="company_street"/>
+                            <field name="company_street2"/>
+                            <field name="company_city"/>
+                            <field name="company_state"/>
+                            <field name="company_zip"/>
+                            <field name="company_country"/>
+                        </group>
+
+                        <footer>
+                            <button name="action_submit"
+                                    string="Submit"
+                                    type="object"
+                                    class="btn-primary"/>
+                            <button string="Close" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="service_extend_wizard_action" model="ir.actions.act_window">
+            <field name="name">Service Extends</field>
+            <field name="res_model">extends.support.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="extend_service_wizard_view"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="printnode_installer_todo" model="ir.actions.todo">
+            <field name="state">open</field>
+            <field name="action_id" ref="service_extend_wizard_action"/>
+        </record>
+    </data>
+</odoo>

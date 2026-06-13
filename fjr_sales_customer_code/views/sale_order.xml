@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_view_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//form//field[@name='product_type']" position="after">
+                <field name="customer_description"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//form//field[@name='product_type']" position="before">
+                <field name="customer_uom"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//list//field[@name='product_uom_qty']" position="before">
+                <field name="customer_description" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='order_line']//list//field[@name='customer_lead']" position="after">
+                <field name="customer_uom" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

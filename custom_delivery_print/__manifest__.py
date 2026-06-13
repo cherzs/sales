@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "Custom Print - Delivery",
+
+    'summary': "Short (1 phrase/line) summary of the module's purpose",
+
+    'description': """
+Long description of module's purpose
+    """,
+
+    'author': "Fajar - 0812 6888 8199",
+    'website': "https://www.yourcompany.com",
+
+    # Categories can be used to filter modules in modules listing
+    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
+    # for the full list
+    'category': 'Inventory',
+    'version': '0.5',
+
+    # any module necessary for this one to work correctly
+    'depends': ['base','fjr_sales_bundle', 'manual_delivery_address','fjr_sales_customer_code'],
+
+    # always loaded
+    'data': [
+        # 'security/ir.model.access.csv',
+        'report/stock_picking.xml',
+    ],
+}

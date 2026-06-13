@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_delivery_document_inherit_sale_stock" inherit_id="sale_stock.report_delivery_document_inherit_sale_stock">
+        <xpath expr="//div[@t-if='o.sudo().sale_id.client_order_ref']" position="attributes">
+            <attribute name="style">display: none !important;</attribute>
+        </xpath>
+        <xpath expr="//div[@t-if='o.sudo().sale_id.incoterm']" position="attributes">
+            <attribute name="style">display: none !important;</attribute>
+        </xpath>
+    </template>
+
+    <template id="stock_report_delivery_document_inherit"  inherit_id="stock.report_delivery_document">
+        <xpath expr="//h2" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+        <t t-set="address" position="replace">
+            <div style="display: none;"/>
+        </t>
+        <xpath expr="//div[contains(@class, 'page')]" position="inside">
+            <style>
+                .o_company_and_layout_header,
+                .o_header {
+                    margin-bottom: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                .header .o_company_logo_small,
+                .header .o_company_logo_big,
+                .header .o_company_logo {
+                    max-height: 34px !important;
+                }
+                .header .o_company_tagline,
+                .header [name="company_address"] {
+                    font-size: 11px !important;
+                    line-height: 1.1 !important;
+                }
+                #informations,
+                div[name="customer_address"],
+                div[name="shipping_address"] {
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                .o_customer_address_compact {
+                    font-size: 12px;
+                    line-height: 1.2;
+                }
+                table.table {
+                    margin-top: 0 !important;
+                }
+            </style>
+        </xpath>
+       
+      
+        <xpath expr="//table[@name='stock_move_table']/thead" position="attributes">
+            <attribute name="style">display: table-header-group;</attribute>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_table']/thead/tr[1]" position="before">
+            <tr>
+                <th colspan="10" style="padding: 0 0 10px 0; border: 0; font-weight: normal; text-align: left;">
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Customer Address</strong>
+                            <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True}'/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Delivery Address:</strong>
+                            <div t-out="o.manual_delivery_address"/>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <h2 class="mb-0" style="color: #6C547C; font-weight: bold;">
+                            <span t-if="o.x_studio_no_do" t-esc="o.x_studio_no_do"/>
+                            <span t-else="" t-field="o.name"/>
+                        </h2>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-3" t-if="o.state" style="min-width: 150px;">
+                            <strong>Shipping Date</strong><br/>
+                            <span t-if="o.state == 'done'" t-field="o.date_done" t-options='{"widget": "date"}'/>
+                            <span t-if="o.state != 'done'" t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                        </div>
+                        <div class="col-4" t-if="o.sudo().sale_id.incoterm" style="min-width: 200px;">
+                            <strong>Incoterm</strong><br/>
+                            <span t-field="o.sudo().sale_id.incoterm.name"/><br/>
+                            <span t-if="o.sudo().sale_id.incoterm_location" t-field="o.sudo().sale_id.incoterm_location"/>
+                        </div>
+                        <div class="col-3" t-if="o.picking_type_id.warehouse_id" style="min-width: 150px;">
+                            <strong>Warehouse</strong><br/>
+                            <span t-field="o.picking_type_id.warehouse_id.code"/>
+                        </div>
+                        <div class="col-3" t-if="o.x_studio_related_field_8u9_1jghfrrgq" style="min-width: 150px;">
+                            <strong>Customer Reference</strong><br/>
+                            <span t-field="o.x_studio_related_field_8u9_1jghfrrgq"/>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_line_table']/thead" position="attributes">
+            <attribute name="style">display: table-header-group;</attribute>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_line_table']/thead/tr[1]" position="before">
+            <tr>
+                <th colspan="10" style="padding: 0 0 10px 0; border: 0; font-weight: normal; text-align: left;">
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Customer Address</strong>
+                            <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True}'/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Delivery Address:</strong>
+                            <div t-out="o.manual_delivery_address"/>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <h2 class="mb-0" style="color: #6C547C; font-weight: bold;">
+                            <span t-if="o.x_studio_no_do" t-esc="o.x_studio_no_do"/>
+                            <span t-else="" t-field="o.name"/>
+                        </h2>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-3" t-if="o.state" style="min-width: 150px;">
+                            <strong>Shipping Date</strong><br/>
+                            <span t-if="o.state == 'done'" t-field="o.date_done" t-options='{"widget": "date"}'/>
+                            <span t-if="o.state != 'done'" t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                        </div>
+                        <div class="col-4" t-if="o.sudo().sale_id.incoterm" style="min-width: 200px;">
+                            <strong>Incoterm</strong><br/>
+                            <span t-field="o.sudo().sale_id.incoterm.name"/><br/>
+                            <span t-if="o.sudo().sale_id.incoterm_location" t-field="o.sudo().sale_id.incoterm_location"/>
+                        </div>
+                        <div class="col-3" t-if="o.picking_type_id.warehouse_id" style="min-width: 150px;">
+                            <strong>Warehouse</strong><br/>
+                            <span t-field="o.picking_type_id.warehouse_id.code"/>
+                        </div>
+                        <div class="col-3" t-if="o.x_studio_related_field_8u9_1jghfrrgq" style="min-width: 150px;">
+                            <strong>Customer Reference</strong><br/>
+                            <span t-field="o.x_studio_related_field_8u9_1jghfrrgq"/>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </xpath>
+
+        <xpath expr="//div[@name='div_origin']" position="attributes">
+            <attribute name="class">col mb-2 px-0</attribute>
+            <attribute name="style">flex: 0 0 20%; max-width: 20%; font-size: 14px; line-height: 1.25;</attribute>
+        </xpath>
+        <xpath expr="//div[@name='div_sched_date']" position="replace"/>
+        
+        <div name="customer_address" position="attributes">
+            <attribute name="style">display: none !important;</attribute>
+        </div>
+        
+
+        <!-- <th name="th_sm_ordered" position="replace" /> -->
+
+        <th name="th_sml_qty_ordered" position="replace" />
+        <th name="lot_serial" position="replace">
+            <th name="lot_serial" t-if="has_serial_number">
+                Lot/Serial Number
+            </th>
+        </th>
+
+        <t t-set="backorders" position="before">
+            <div t-if="o.note" class="mb-2">
+                <strong>Notes:</strong>
+                <div t-field="o.note" t-options='{"widget": "text"}'/>
+            </div>
+        </t>
+
+
+        <t t-set="backorders" position="before">
+            <style>
+                .keep-together {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                .keep-together tr {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                .keep-together td {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+            </style>
+            <div style="padding-top: 10mm;">
+                <div class="row" style="page-break-inside: avoid; break-inside: avoid;">
+                    <div class="col-12 text-center">
+                        <table class="table table-borderless text-center">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Prepared By</strong>
+                                        <div style="height:2.5rem;"></div>
+                                        <div>__________________________</div>
+                                        <div>Date:</div>
+                                    </td>
+                                    <td>
+                                        <strong>Approved By</strong>
+                                        <div style="height:2.5rem;"></div>
+                                        <div>__________________________</div>
+                                        <div>Date:</div>
+                                    </td>
+                                    <td>
+                                        <strong>Received By</strong>
+                                        <div style="height:2.5rem;"></div>
+                                        <div>__________________________</div>
+                                        <div>Date:</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-center" style="font-size: 14px; margin-top: 5px;">
+                            Mohon di tanda tangan dan cap perusahaan sebanyak 3 kali, Lembar 1: Penagihan, Lembar 2 : Gudang, Lembar 3 : Ekspedisi
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
+
+        <div t-if="not (o.backorder_ids and backorders)" position="attributes">
+            <attribute name="t-if" add="True" separator="or"/>
+        </div>
+
+        <th name="th_sm_product" position="before">
+            <th name="th_sm_no text-center" style="width:5%;">No</th>
+            <t t-set="sm_no" t-value="1"/>
+        </th>
+
+        <xpath expr="//tr[@t-foreach='lines']//td[1]" position="before">
+            <td class="text-center">
+                <span t-esc="sm_no"/>
+            </td>
+            <t t-set="sm_no" t-value="sm_no + 1"/>
+        </xpath>
+
+        <span t-field="move.product_id" position="replace">
+            <span t-if="not move.customer_description" t-esc="move.product_id.display_name.replace('[%s] ' % move.product_id.default_code, '') if move.product_id.default_code else move.product_id.display_name"/>
+            <span t-if="move.customer_description" t-esc="move.customer_description" />
+        </span>
+
+        <span t-field="bo_line.product_id" position="replace">
+            <span t-if="not bo_line.customer_description" t-esc="bo_line.product_id.display_name.replace('[%s] ' % bo_line.product_id.default_code, '') if bo_line.product_id.default_code else bo_line.product_id.display_name" />
+            <span t-if="bo_line.customer_description" t-esc="bo_line.customer_description" />
+        </span>
+
+        <div name="div_origin" position="attributes">
+            <attribute name="t-if">o.origin and o.picking_type_code != 'outgoing'</attribute>
+        </div>
+        
+
+       
+
+        <xpath expr="//tr[@t-foreach='lines']//td[hasclass('o_td_quantity')]" position="replace">
+           <td class="o_td_quantity text-end">
+                <span t-field="move.product_uom_qty" class="text-nowrap"/>
+                <span t-if="not move.customer_uom" t-field="move.product_uom" />
+                <span t-if="move.customer_uom" t-esc="move.customer_uom" />
+                <span t-if="move.product_packaging_id">
+                    (<span t-field="move.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
+                </span>
+            </td>
+        </xpath>
+
+        <span t-field="bo_line.product_uom" position="replace">
+            <span t-if="not bo_line.customer_uom" t-field="bo_line.product_uom" />
+            <span t-if="bo_line.customer_uom" t-esc="bo_line.customer_uom" />
+        </span>
+
+        <th name="th_sml_product" position="before">
+            <th name="th_sml_no text-center" style="width:5%;">No</th>
+        </th>
+
+
+
+         
+    </template>
+
+    <template id="stock_report_delivery_has_serial_move_line_inherit"  inherit_id="stock.stock_report_delivery_has_serial_move_line">
+        <span t-field="move_line.product_id" position="replace">
+            <span t-if="not move_line.move_id.customer_description" t-esc="move_line.product_id.display_name.replace('[%s] ' % move_line.product_id.default_code, '') if move_line.product_id.default_code else move_line.product_id.display_name" />
+            <span t-if="move_line.move_id.customer_description" t-esc="move_line.move_id.customer_description" />
+        </span>
+
+
+        <span t-field="move_line.product_uom_id" position="replace">
+            <span t-if="not move_line.move_id.customer_uom" t-field="move_line.product_uom_id" />
+            <span t-if="move_line.move_id.customer_uom" t-esc="move_line.move_id.customer_uom" />
+        </span>
+    </template>
+
+    <template id="stock_report_delivery_aggregated_move_lines_inherit" inherit_id="stock.stock_report_delivery_aggregated_move_lines">
+        <span t-esc="aggregated_lines[line]['name']" position="replace">
+            <span t-if="not aggregated_lines[line]['customer_description']" t-esc="aggregated_lines[line]['move'].product_id.display_name.replace('[%s] ' % aggregated_lines[line]['move'].product_id.default_code, '') if aggregated_lines[line]['move'].product_id.default_code else aggregated_lines[line]['move'].product_id.display_name" />
+            <span t-if="aggregated_lines[line]['customer_description']" t-esc="aggregated_lines[line]['customer_description']" />
+        </span>
+
+        <td name="move_line_aggregated_qty_ordered" position="replace"/>
+        
+        <span t-esc="aggregated_lines[line]['product_uom'].name" position="replace">
+            <span t-if="not aggregated_lines[line]['customer_uom']" t-esc="aggregated_lines[line]['product_uom'].name" />
+            <span t-if="aggregated_lines[line]['customer_uom']" t-esc="aggregated_lines[line]['customer_uom']" />
+        </span>
+
+        <td name="move_line_aggregated_quantity" position="replace">
+            <td class="text-center" name="move_line_aggregated_quantity">
+                <span t-esc="aggregated_lines[line]['quantity']"
+                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                <span t-if="not aggregated_lines[line]['customer_uom']" t-esc="aggregated_lines[line]['product_uom'].name" />
+                <span t-if="aggregated_lines[line]['customer_uom']" t-esc="aggregated_lines[line]['customer_uom']" />
+                <span t-if="aggregated_lines[line]['packaging'].name">
+                    (<span t-out="aggregated_lines[line]['packaging_quantity']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
+                </span>
+            </td>
+        </td>
+
+        <tr t-foreach="aggregated_lines" position="before">
+            <t t-set="line_no" t-if="not line_no" t-value="1"/>
+        </tr>
+        <xpath expr="//tr[@t-foreach='aggregated_lines']//td[1]" position="before">
+            <td class="text-center">
+                <span t-esc="line_no"/>
+            </td>
+            <t t-set="line_no" t-value="line_no + 1"/>
+        </xpath>
+    </template>
+
+
+    <template id="mrp_stock_report_delivery_document_inherit_mrp"  inherit_id="mrp.stock_report_delivery_document_inherit_mrp">
+        <t t-elif="has_kits and not has_packages" position="replace">
+            <t t-elif="has_kits and not has_packages">
+            
+                <t t-set="line_no" t-value="1"/>
+                <t t-set="all_kits_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type == 'phantom')"/>
+                <t t-set="boms" t-value="has_kits.mapped('move_id.bom_line_id.bom_id')"/>
+                <t t-foreach="boms" t-as="bom">
+                    <!-- Separate product.product from template for variants-->
+                    <t t-if="bom.product_id">
+                        <t t-set="kit_product" t-value="bom.product_id"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="kit_product" t-value="bom.product_tmpl_id"/>
+                    </t>
+                    <t t-set="kit_move_lines" t-value="all_kits_move_lines.filtered(lambda l: l.move_id.bom_line_id.bom_id == bom)"/>
+                    <t t-set="move_id" t-value="kit_move_lines[0].move_id"/>
+                    <t t-set="customer_description" t-value="move_id.customer_description if kit_move_lines else ''"/>
+                    <t t-set="kit_qty" t-value="kit_move_lines._get_kit_done_qty()"/>
+                    <tr >
+                        <td class="text-center">
+                            <span t-esc="line_no"/>
+                            <t t-set="line_no" t-value="line_no + 1"/>
+                        </td>
+                        
+                        <td >
+                            <span t-esc="customer_description or kit_product.display_name"/>
+                        </td>
+                        <td class="text-center" name="move_line_aggregated_qty_ordered">
+                            <span t-esc="kit_qty"
+                                t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                            <span t-esc="move_id.customer_uom or move_id.product_uom.name"/>
+                            
+                        </td>
+                    </tr>
+                    
+                </t>
+                <t t-set="aggregated_lines" t-value="o.move_line_ids._get_aggregated_product_quantities()"/>
+                <t t-call="stock.stock_report_delivery_aggregated_move_lines" />
+                    
+                
+            </t>
+        </t>
+    </template>
+
+    <template id="web_address_layout_compact_inherit_delivery" inherit_id="web.address_layout" priority="99">
+        <xpath expr="//div[@t-if='address']" position="attributes">
+            <attribute name="t-attf-class">address row mb-0</attribute>
+            <attribute name="style">margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important;</attribute>
+        </xpath>
+
+    </template>
+
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_product_bundle_line_user,fjr_sales_bundle.sale.product.bundle.line,model_sale_product_bundle_line,base.group_user,1,1,1,1
+access_sale_order_line_bundle_wizard_user,fjr_sales_bundle.sale.order.line.bundle.wizard,model_sale_order_line_bundle_wizard,base.group_user,1,1,1,1
+access_sale_order_line_bundle_wizard_line_user,fjr_sales_bundle.sale.order.line.bundle.wizard.line,model_sale_order_line_bundle_wizard_line,base.group_user,1,1,1,1
+access_sale_order_line_bundle_user,fjr_sales_bundle.sale.order.line.bundle,model_sale_order_line_bundle,base.group_user,1,1,1,1

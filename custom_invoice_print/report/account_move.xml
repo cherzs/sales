@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="account_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <div t-if="o.invoice_origin" position="replace" />
+        <t t-set="address" position="replace">
+            <div style="display:none;"/>
+        </t>
+
+        <t t-set="information_block" position="replace"/>
+
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title"/>
+        </xpath>
+
+        <xpath expr="//div[@id='informations']" position="replace">
+            <div id="informations" style="display:none;"/>
+        </xpath>
+        <!-- <div id="informations" position="attributes">
+            <attribute name="class" remove="mt-4" separator=" "/>
+            <attribute name="style">margin-top: 0 !important; padding-top: 0 !important;</attribute>
+        </div> -->
+
+        <xpath expr="//table[contains(@class, 'o_main_table')]/thead" position="attributes">
+            <attribute name="style">display: table-header-group;</attribute>
+        </xpath>
+
+        <xpath expr="//table[contains(@class, 'o_main_table')]/thead/tr[1]" position="before">
+            <tr>
+                <th colspan="99" style="padding: 0 0 8px 0; border: 0; font-weight: normal; text-align: left;">
+                    <div class="invoice-repeat-block">
+                        <div class="row mb-2 invoice-repeat-address">
+                            <div class="col-6">
+                                <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
+                                    <strong>Shipping Address</strong>
+                                    <div t-field="o.partner_shipping_id"
+                                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                </t>
+
+                                <t t-else="">
+                                    <div t-field="o.partner_id"
+                                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                    <div t-if="o.partner_id.vat">
+                                        <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                                        t-out="o.company_id.account_fiscal_country_id.vat_label"/>
+                                        <t t-else="">Tax ID</t>:
+                                        <span t-field="o.partner_id.vat"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div style="font-size: 28px; line-height: 1.1; color: #5f4b68; margin-bottom: 10px;">
+                            <span t-if="proforma">PROFORMA </span>
+                            <span t-if="o.move_type == 'out_invoice'">Invoice </span>
+                            <span t-elif="o.move_type == 'out_refund'">Credit Note </span>
+                            <span t-elif="o.move_type == 'in_invoice'">Vendor Bill </span>
+                            <span t-if="o.name and o.name != '/'" t-field="o.name"/>
+                        </div>
+
+                        <div class="row" style="font-size: 14px; line-height: 1.25; margin-bottom: 16px;">
+                            <div class="col-2" t-if="o.invoice_date">
+                                <strong>Invoice Date</strong><br/>
+                                <span t-field="o.invoice_date"/>
+                            </div>
+
+                            <div class="col-2" t-if="o.invoice_date_due">
+                                <strong>Due Date</strong><br/>
+                                <span t-field="o.invoice_date_due"/>
+                            </div>
+
+                            <div class="col-2" t-if="o.delivery_date">
+                                <strong>Delivery Date</strong><br/>
+                                <span t-field="o.delivery_date"/>
+                            </div>
+
+                            <div class="col-2" t-if="o.ref">
+                                <strong>Reference</strong><br/>
+                                <span t-field="o.ref"/>
+                            </div>
+
+                            <div class="col-4" t-if="o.invoice_incoterm_id">
+                                <strong>Incoterm</strong><br/>
+                                <span t-field="o.invoice_incoterm_id.name"/>
+                                <t t-if="o.incoterm_location">
+                                    <br/>
+                                    <span t-field="o.incoterm_location"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </xpath>
+
+        <xpath expr="//div[contains(@class, 'page')]" position="inside">
+            <style>
+                /* ── compact company header ── */
+                .o_company_and_layout_header,
+                .o_header {
+                    margin-bottom: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+                .header .o_company_logo_small,
+                .header .o_company_logo_big,
+                .header .o_company_logo {
+                    max-height: 34px !important;
+                }
+                .header .o_company_tagline,
+                .header [name="company_address"] {
+                    font-size: 11px !important;
+                    line-height: 1.1 !important;
+                }
+                #informations {
+                    margin-top: 0 !important;
+                    padding-top: 0 !important;
+                }
+                .o_customer_address_compact {
+                    font-size: 12px;
+                    line-height: 1.2;
+                }
+                table.o_main_table thead {
+                    display: table-header-group !important;
+                }
+
+                table.o_main_table thead tr:first-child th {
+                    border: 0 !important;
+                }
+
+                .invoice-repeat-block {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                .article > .address,
+                .article > .row.address,
+                .article div.address.row:not(.invoice-repeat-address) {
+                    display: none !important;
+                }
+            </style>
+        </xpath>
+
+        <!-- <t t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" position="replace">
+            <t t-if="True">
+                <div class="col-6" t-if="o.manual_delivery_address">
+                    <t t-set="address">
+                        <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                            <strong class="d-block mt-1 mb-1">Shipping Address</strong>
+                            <div t-field="o.manual_delivery_address"/>
+                        </div>
+                    </t>
+                </div>
+                <div class="col-6" name="address_not_same_as_shipping">
+                    <t t-set="information_block">
+                        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        <div t-if="o.partner_id.vat" id="partner_vat_address_not_same_as_shipping">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t> -->
+
+        <span t-field="o.amount_total_words" position="replace">
+            <span t-esc="o._amount_to_text()"/>
+        </span>
+
+        <!-- <span t-field="o.invoice_incoterm_id.code" position="replace">
+            <span t-field="o.invoice_incoterm_id.name"/>
+        </span>
+
+        <div t-field="o.invoice_incoterm_id.code" position="attributes">
+            <attribute name="t-field">o.invoice_incoterm_id.name</attribute>
+        </div> -->
+
+        <xpath expr="//p[@name='payment_communication']" position="replace">
+            <p name="payment_communication" t-if="o.partner_bank_id">
+                Account Number:
+                <span class="fw-bold" t-field="o.partner_bank_id.acc_number"/>
+            </p>
+        </xpath>
+
+        <td name="account_invoice_line_name" position="replace">
+            <td name="account_invoice_line_name">
+                <span t-if="line.customer_description" t-field="line.customer_description" />
+                <span t-if="not line.customer_description and line.name" t-esc="line._get_label_without_product_code()" t-options="{'widget': 'text'}">Bacon Burger</span>
+            </td>
+        </td>
+
+        <span t-field="line.product_uom_id" position="replace">
+            <t t-if="line.customer_uom">
+                <span t-field="line.customer_uom"/>
+            </t>
+            <t t-else="">
+                <span t-field="line.product_uom_id" groups="uom.group_uom">units</span>
+            </t>
+        </span>
+
+        <div name="comment" position="replace" />
+        <t t-set="payment_term_details" position="before">
+            <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
+                <span t-field="o.narration"/>
+            </div>
+        </t>
+
+        <th name="th_description" position="before">
+            <th name="th_no" width="5%" class="text-center">No</th>
+            <t t-set="line_no" t-value="1"/>
+        </th>
+        <td name="account_invoice_line_name" position="before">
+            <td class="text-center">
+                <span t-esc="line_no"/>
+            </td>
+            <t t-set="line_no" t-value="line_no + 1"/>
+        </td>
+
+        <div id="payment_term" position="after">
+            <style>
+                .keep-together { page-break-inside: avoid; break-inside: avoid; }
+                .keep-together tr { page-break-inside: avoid; break-inside: avoid; }
+                .keep-together td { page-break-inside: avoid; break-inside: avoid; }
+            </style>
+            <div class="row" style="margin-top: 15mm;">
+                <div class="col-8"></div>
+                <div class="col-4">
+                    <table class="table table-borderless keep-together">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="height:3rem;"></div>
+                                    <div style="border-top:1px solid black;" t-field="o.company_id" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="web_address_layout_compact_inherit_invoice" inherit_id="web.address_layout" priority="99">
+        <xpath expr="//div[@t-if='address']" position="attributes">
+            <attribute name="t-attf-class">address row mb-0</attribute>
+            <attribute name="style">margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important;</attribute>
+        </xpath>
+    </template>
+
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_view_common_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.view.common.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <div name="options" position="inside">
+                <span class="d-inline-flex" name="sale_bundle_option" invisible="not sale_ok">
+                    <label string="Sales Bundle" for="is_sale_bundle"/>
+                    <field name="is_sale_bundle"/>
+                </span>
+            </div>
+            <notebook position="inside">
+                <page string="Sales Bundle" invisible="not sale_ok or not is_sale_bundle">
+                    <field name="sale_product_bundle_line_ids" >
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="uom_id" groups="!uom.group_uom" column_invisible="1"/>
+
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page> 
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

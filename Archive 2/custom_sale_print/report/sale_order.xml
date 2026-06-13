@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@id='informations']" position="replace">
+            <div id="informations" style="display: none;"/>
+        </xpath>
+        <t t-set="address" position="replace">
+            <div style="display: none;"/>
+        </t>
+        <t t-set="information_block" position="replace" />
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title">
+                <span/>
+            </t>
+        </xpath>
+        <xpath expr="//table[contains(@class, 'o_main_table')]/thead" position="attributes">
+            <attribute name="style">display: table-header-group;</attribute>
+        </xpath>
+        <xpath expr="//table[contains(@class, 'o_main_table')]/thead/tr[1]" position="before">
+            <tr>
+                <th colspan="6" style="padding: 0 0 8px 0; border: 0;">
+                    <h2 class="mb-2">
+                        Order # 
+                        <span t-field="doc.name"/>
+                    </h2>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Invoicing Address</strong>
+                            <div t-field="doc.partner_invoice_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        </div>
+                        <div class="col-6">
+                            <strong>Shipping Address</strong>
+                            <div t-field="doc.manual_delivery_address"/>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th colspan="6" style="padding: 0 0 8px 0; border: 0;">
+                    <div class="row">
+                        <div class="col-3">
+                            <strong>Your Reference</strong>
+                            <div t-if="doc.client_order_ref" t-field="doc.client_order_ref"/>
+                            <div t-else="">-</div>
+                        </div>
+                        <div class="col-2">
+                            <strong>Order Date</strong>
+                            <div t-if="doc.date_order" t-field="doc.date_order" t-options='{"widget": "date"}'/>
+                            <div t-else="">-</div>
+                        </div>
+                        <div class="col-2">
+                            <strong>Warehouse</strong>
+                            <div t-if="doc.warehouse_id" t-field="doc.warehouse_id.code"/>
+                            <div t-else="">-</div>
+                        </div>
+                        <div class="col-5">
+                            <strong>Incoterm</strong>
+                            <div t-if="doc.incoterm_location">
+                                <span t-field="doc.incoterm.name"/><br/>
+                                <span t-field="doc.incoterm_location"/>
+                            </div>
+                            <div t-elif="doc.incoterm" t-field="doc.incoterm.name"/>
+                            <div t-else="">-</div>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </xpath>
+        <td name="td_name" position="replace">
+            <td name="td_name">
+            
+                <t t-if="line.customer_description">
+                    <t t-if="line.product_id.default_code">
+                        <span>[</span><span t-field="line.product_id.default_code"/><span>]</span>
+                    </t>
+                    <span t-field="line.customer_description"/>
+                </t>
+                <t t-else="">
+                    <span t-field="line.name">Bacon Burger</span>
+                </t>
+            </td>
+        </td>
+        <span t-field="line.product_uom" position="replace">
+            <t t-if="line.customer_uom">
+                <span t-field="line.customer_uom"/>
+            </t>
+            <t t-else="">
+                <span t-field="line.product_uom"/>
+            </t>
+        </span>
+
+        <xpath expr="//div[contains(@class, 'page')]" position="inside">
+            <style>
+                .keep-together {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                .keep-together tr {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+                .keep-together td {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
+            </style>
+        </xpath>
+
+        <xpath expr="//div[@id='total']" position="before">
+            <t t-set="printable_lines" t-value="doc.order_line.filtered(lambda l: not l.display_type)"/>
+            <t t-if="len(printable_lines) > 20">
+                <div style="padding-top: 8mm;"></div>
+            </t>
+            <t t-elif="len(printable_lines) > 12">
+                <div style="padding-top: 6mm;"></div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='total']" position="after">
+            <div class="row justify-content-center mt-2"
+                 style="padding-top: 10mm;">
+                <div class="col-8">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Prepared By</strong>
+                                    <div style="height: 2rem;"></div>
+                                    <div>__________________________</div>
+                                    <div>Date:</div>
+                                </td>
+                                <td>
+                                    <strong>Approved By</strong>
+                                    <div style="height: 2rem;"></div>
+                                    <div>__________________________</div>
+                                    <div>Date:</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="sale_stock_report_saleorder_document_inherit_sale_stock_inherit" inherit_id="sale_stock.report_saleorder_document_inherit_sale_stock">
+        <!-- @t-field: attribute selector (without @, XPath looks for a child element named t-field) -->
+        <xpath expr="//span[@t-field='doc.incoterm.code']" position="replace">
+            <span t-field="doc.incoterm.name"/>
+        </xpath>
+        <xpath expr="//div[@t-field='doc.incoterm.code']" position="replace">
+            <div t-else="" t-field="doc.incoterm.name"/>
+        </xpath>
+        <div t-if="doc.incoterm" position="before"/>
+    </template>
+
+</odoo>
