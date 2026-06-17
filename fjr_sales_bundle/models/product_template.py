@@ -41,6 +41,19 @@ class SaleProductBundleLine(models.Model):
 
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
+    @api.depends('product_id', 'quantity', 'uom_id')
+    def _compute_display_name(self):
+        for rec in self:
+            code = rec.product_id.default_code or ''
+            name = rec.product_id.name or ''
+            qty = rec.quantity
+            uom = rec.uom_id.name or ''
+            if code:
+                rec.display_name = '[%s] %s x%s %s' % (code, name, qty, uom)
+            elif name:
+                rec.display_name = '%s x%s %s' % (name, qty, uom)
+            else:
+                rec.display_name = '%s, %s' % (self._description, rec.id)
 
     @api.depends('product_id')
     def _compute_uom_id(self):
